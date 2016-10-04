@@ -1,3 +1,5 @@
+from . import mysqlConnector
+
 class SiteRelation(object):
 	"""docstring for SiteRelation"""
 	def __init__(self,mysqlConn):

@@ -1,3 +1,5 @@
+from . import mysqlConnector
+
 class SiteGrabHistory(object):
 	"""docstring for SiteGrabHistory"""
 	def __init__(self,mysqlConn):
