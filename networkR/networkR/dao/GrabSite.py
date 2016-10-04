@@ -14,6 +14,14 @@ class GrabSite(object):
 
 
 	def insert(self,items = []):
-		#cursor.execute(xxx)
+		pass
+
+
+	def query(self,items = []):
+		pass
+
+	def update(self,items = []):
+		pass
+
 
 
