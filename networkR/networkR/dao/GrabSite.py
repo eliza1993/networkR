@@ -1,6 +1,6 @@
 import MySQLdb
 
-from . import mysqlConnector
+import mysqlConnector
 class GrabSite(object):
 	"""docstring for GrabSite"""
 

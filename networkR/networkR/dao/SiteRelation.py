@@ -1,4 +1,4 @@
-from . import mysqlConnector
+import mysqlConnector
 
 class SiteRelation(object):
 	"""docstring for SiteRelation"""
