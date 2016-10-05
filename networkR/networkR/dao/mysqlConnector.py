@@ -9,7 +9,7 @@ class mysqlConnector(object):
 	def __init__(self):
 		pass
 		
-	def openDb(host = '127.0.0.1',user = 'root',passwd = '',dbname = 'Spider' ,charset='utf8'):
+	def openDb(self,host = '127.0.0.1',user = 'root',passwd = '',dbname = 'Spider' ,charset='utf8'):
 		"""
 			打开数据库连接
 		"""
@@ -18,7 +18,7 @@ class mysqlConnector(object):
 		return db
 
 
-	def closeDb(database = None):
+	def closeDb(self,database = None):
 		"""
 			关闭数据库连接
 		"""
