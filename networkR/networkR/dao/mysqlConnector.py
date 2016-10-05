@@ -9,11 +9,11 @@ class mysqlConnector(object):
 	def __init__(self):
 		pass
 		
-	def openDb(host = '127.0.0.1',port = 3306,user = 'root',passwd = '',dbname = 'Spider' ,charset='utf8'):
+	def openDb(host = '127.0.0.1',user = 'root',passwd = '',dbname = 'Spider' ,charset='utf8'):
 		"""
 			打开数据库连接
 		"""
-		db = MySQLdb.connect(host,port,user,passwd ,dbname,charset)
+		db = MySQLdb.connect(host,user,passwd ,dbname,charset)
 
 		return db
 
