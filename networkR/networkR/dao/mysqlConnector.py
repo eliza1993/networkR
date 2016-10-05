@@ -15,6 +15,8 @@ class mysqlConnector(object):
 		"""
 		db = MySQLdb.connect(host,port,user,passwd ,dbname,charset)
 
+		return db
+
 
 	def closeDb(database = None):
 		"""
