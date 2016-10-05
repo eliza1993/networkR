@@ -11,7 +11,7 @@ if __name__ == '__main__':
 	url2 = 'http://www.baidu.com'
 
 	mysqlConn = mysqlConnector()
-	dbConn = mysqlConnector.openDb(host = "172.16.111.87",port = 3306,user = "root",passwd = "",dbname = "Spider")
+	dbConn = mysqlConn.openDb("172.16.111.87",3306,"root","","Spider")
 	siteGbHis = SiteGrabHistory(dbConn)
 	pipeline = NetworkrPipeline(siteGbHis)
 	print pipeline.get_domain(url)
