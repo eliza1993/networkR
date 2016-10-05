@@ -1,4 +1,4 @@
-from . import mysqlConnector
+import mysqlConnector
 
 class SiteGrabHistory(object):
 	"""docstring for SiteGrabHistory"""

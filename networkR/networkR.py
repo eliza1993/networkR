@@ -6,16 +6,19 @@ from networkR.dao.SiteGrabHistory import SiteGrabHistory
 from networkR.dao.mysqlConnector import mysqlConnector
 
 
+def get_items():
+	items = []
 
 def process_item_test():
 	mysqlConn = mysqlConnector()
 	dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
 	siteGbHis = SiteGrabHistory(dbConn)
 	pipeline = NetworkrPipeline(siteGbHis)
-	items = {}
-	pipeline.process_item(items,None)
+	pipeline.process_item(get_items(),None)
 
-	mysqlConn.close(dbConn)
+	mysqlConn.closeDb(dbConn)
+
+
 
 def get_domain_test():
 	url = 'https://www.baidu.com'

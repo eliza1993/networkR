@@ -13,8 +13,8 @@ class GrabSite(object):
 
 
 
-	def insert(self,items = []):
-		pass
+	def insert(self,items = {}):
+		print items
 
 
 	def query(self,items = []):
