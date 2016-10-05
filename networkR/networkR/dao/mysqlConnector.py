@@ -13,7 +13,7 @@ class mysqlConnector(object):
 		"""
 			打开数据库连接
 		"""
-		db = MySQLdb.connect(host,user,passwd ,dbname,charset)
+		db = MySQLdb.connect(host,user,passwd,dbname)
 
 		return db
 
