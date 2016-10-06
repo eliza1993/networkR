@@ -62,7 +62,10 @@ class GrabSite(object):
 		pass
 
 	def update(self,items = []):
-		pass
+		update_sql = "update GrabSite set siteStatus = '%s' where siteDomain = '%s'" % (items['siteStatus'],items['siteDomain'])
+		cursor = self.get_cursor()
+		cursor.execute()
+		conn.commit()
 
 
 
