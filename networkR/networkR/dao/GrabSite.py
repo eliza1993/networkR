@@ -5,7 +5,11 @@ from mysqlConnector import mysqlConnector
 class GrabSite(object):
 	"""docstring for GrabSite"""
 
+<<<<<<< HEAD
 	
+=======
+	insert_sql = "insert into "+"GrabSite(siteDomain,siteName,webPageCount,totalOutLinkCuont,siteStatus,siteType,createTime,startGrabTime,endGrabTime) "+"values(%s,%s,%d,%d,%s,%s,%s,%s,%s);"
+>>>>>>> e9d944de3ef8aa0702388d6544771d7e8035b3a6
 	def __init__(self,mysqlConn):
 		self.mysqlConn = mysqlConn
 
@@ -64,7 +68,18 @@ class GrabSite(object):
 		pass
 
 	def update(self,items = []):
-		pass
+		update_sql = "update GrabSite set siteStatus = '%s' where siteDomain = '%s'" % (items['siteStatus'],items['siteDomain'])
+		cursor = self.get_cursor()
+		cursor.execute()
+		conn.commit()
+
+
+
+if __name__ == '__main__':
+	mysqlConn = mysqlConnector()
+	dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
+	gbSite = GrabSite(dbConn)
+	print 'test'
 
 if __name__ == '__main__':
 	link = mysqlConnector()

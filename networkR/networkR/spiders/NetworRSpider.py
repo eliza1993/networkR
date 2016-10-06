@@ -118,6 +118,10 @@ class NetworRSpider(scrapy.Spider):
 
                 return urls
 
+            hItems['siteDomain'] = result['siteDomain']
+            hItems['grabStatus'] = result['FINISH']
+            gbSite.update(hItems)
+
         
         items['siteStatus'] = 'WAIT'
         result = gbSite.query_grab_site_by_status(items)

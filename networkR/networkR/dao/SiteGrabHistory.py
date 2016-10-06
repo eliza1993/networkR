@@ -6,10 +6,9 @@ class SiteGrabHistory(object):
 		self.mysqlConn = mysqlConn
 
 	def get_cursor(self):
-		return mysqlConn.cursor()
+		return self.mysqlConn.cursor()
 	def insert_one(self,items = []):
-		insert_sql = "insert into SiteGrabHistory(siteDomain,url,grabStatus,innerPageCount,outPageCount,createTime,lastUpdateTime) "+
-		"values(%s,%s,%s,%d,%d,%s,%s)"
+		insert_sql = "insert into SiteGrabHistory(siteDomain,url,grabStatus,innerPageCount,outPageCount,createTime,lastUpdateTime) "+"values(%s,%s,%s,%d,%d,%s,%s)"
 
 		insert_item  = []
 		insert_item.append(items['siteDomain'])
