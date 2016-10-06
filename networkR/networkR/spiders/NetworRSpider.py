@@ -77,7 +77,7 @@ class NetworRSpider(scrapy.Spider):
         items['siteDomain'] = ''
         for url in start_urls:
             items['siteDomain'] = url;
-            result = gbSite.query(items)
+            result = gbSite.query_grab_site_by_domain(items)
             if result is None:
                 items['siteDomain'] = url
                 items['siteName'] = url
@@ -88,7 +88,7 @@ class NetworRSpider(scrapy.Spider):
                 items['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
                 items['startGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
                 items['endGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
-                gbSite.insert(items)
+                gbSite.insert_one(items)
 
 
     def init_gb_site(self):
@@ -99,18 +99,18 @@ class NetworRSpider(scrapy.Spider):
     def init_site_grab_history(self):
         mysqlConn = mysqlConnector()
         dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
-        gbSite = GrabSite(dbConn)
+        gbSiteHis = SiteGrabHistory(dbConn)
 
 
     def plan_next_excute_urls(self):
         items = {}
         items['siteStatus'] = 'WORKING'
-        result = gbSite.query(items)
+        result = gbSite.query_grab_site_by_status(items)
         if result not None:
             hItems = {}
             hItems['siteDomain'] = result['siteDomain']
             hItems['grabStatus'] = result['NEW']
-            result =  gbSiteHis.query(hItems)
+            result =  gbSiteHis.query_by_domain_and_status(hItems)
             if result not None and len(result) > 0:
                 urls = []
                 for res in result:
@@ -120,11 +120,10 @@ class NetworRSpider(scrapy.Spider):
 
         
         items['siteStatus'] = 'WAIT'
-        result = gbSite.query(items)
+        result = gbSite.query_grab_site_by_status(items)
         if result not None:
             urls = []
-            for res in result:
-                urls.append(res['siteDomain'])
+            urls.append(res['siteDomain'])
 
             return urls;
 

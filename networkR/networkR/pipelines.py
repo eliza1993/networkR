@@ -60,7 +60,7 @@ class NetworkrPipeline(object):
 			insertItems['innerPageCount'] = 0
 			insertItems['outPageCount'] = 0;
 			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-			siteGrabHis.insert(insertItems);
+			siteGrabHis.insert_one(insertItems);
 
 
 
@@ -71,7 +71,7 @@ class NetworkrPipeline(object):
 			insertItems['innerPageCount'] = 0
 			insertItems['outPageCount'] = 0;
 			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-			siteGrabHis.insert(insertItems);
+			siteGrabHis.insert_one(insertItems);
 			#建立 site relation 关系
 			self.handle_site_relation(item['domain'],insertItems["domain"])
 
@@ -116,10 +116,11 @@ class NetworkrPipeline(object):
 
 		items['masterSite'] = masterSite;
 		items['outLinkSite'] = outLinkSite
+		items['outLinkCount'] = 0
 		items['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
 		items['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
 
-		self.siteRelation.insert(items)
+		self.siteRelation.insert_one(items)
 
 
 	def has_site_relation(self,masterSite,outLinkSite):
