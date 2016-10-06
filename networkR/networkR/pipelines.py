@@ -86,6 +86,9 @@ class NetworkrPipeline(object):
 			siteGrabHis.update(insertItems);
 
 
+			
+
+
 
 	def get_domain(self,url):
 		if 'http://' in url:

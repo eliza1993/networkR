@@ -99,6 +99,31 @@ class GrabSite(object):
 		self.mysqlConn.commit()
 
 
+	def update_count(self,items = {}):
+		query_sql =  "select webPageCount,totalOutLinkCuont from GrabSite where siteDomain = '%s'" % (items['siteDomain'])
+		cursor = self.get_cursor()
+		cursor.execute(query_sql)
+		result = cursor.fetchone()
+		if result is None:
+			print ' no record'
+			return
+
+
+
+
+		update_sql = "update GrabSite set  where siteDomain = %s" #% (items['siteStatus'],items['siteDomain'])
+		
+		item_value = []
+
+		item_value.append(items['siteStatus'])
+		item_value.append(items['siteDomain'])
+
+		cursor = self.get_cursor()
+		cursor.execute(update_sql,item_value)
+		self.mysqlConn.commit()
+		
+
+
 def test_query():
 	link = mysqlConnector()
 	connect = link.openDb('172.16.111.87','root','','Spider')

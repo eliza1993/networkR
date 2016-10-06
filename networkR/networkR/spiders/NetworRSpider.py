@@ -123,7 +123,7 @@ class NetworRSpider(scrapy.Spider):
             gbSite.update(hItems)
 
         
-        items['siteStatus'] = 'WAIT'
+        items['siteStatus'] = 'NEW'
         result = gbSite.query_grab_site_by_status(items)
         if result not None:
             urls = []
