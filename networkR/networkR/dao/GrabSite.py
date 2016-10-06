@@ -5,11 +5,6 @@ from mysqlConnector import mysqlConnector
 class GrabSite(object):
 	"""docstring for GrabSite"""
 
-<<<<<<< HEAD
-	
-=======
-	insert_sql = "insert into "+"GrabSite(siteDomain,siteName,webPageCount,totalOutLinkCuont,siteStatus,siteType,createTime,startGrabTime,endGrabTime) "+"values(%s,%s,%d,%d,%s,%s,%s,%s,%s);"
->>>>>>> e9d944de3ef8aa0702388d6544771d7e8035b3a6
 	def __init__(self,mysqlConn):
 		self.mysqlConn = mysqlConn
 
@@ -68,26 +63,76 @@ class GrabSite(object):
 		pass
 
 	def update(self,items = []):
-		update_sql = "update GrabSite set siteStatus = '%s' where siteDomain = '%s'" % (items['siteStatus'],items['siteDomain'])
+		update_sql = "update GrabSite set siteStatus = %s where siteDomain = %s" #% (items['siteStatus'],items['siteDomain'])
+		
+		item_value = []
+
+		item_value.append(items['siteStatus'])
+		item_value.append(items['siteDomain'])
+
 		cursor = self.get_cursor()
-		cursor.execute()
-		conn.commit()
+		cursor.execute(update_sql,item_value)
+		self.mysqlConn.commit()
 
 
-
-if __name__ == '__main__':
-	mysqlConn = mysqlConnector()
-	dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
-	gbSite = GrabSite(dbConn)
-	print 'test'
-
-if __name__ == '__main__':
+def test_query():
 	link = mysqlConnector()
 	connect = link.openDb('172.16.111.87','root','','Spider')
 	test = GrabSite(connect)
 	time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 	#time = datetime.datetime.now()
-	a = {"siteDomain":"www.aa.comm","siteName":"aa","webPageCount":0,"totalOutLinkCuont":0,"siteStatus":"NEW","siteType":"seed","createTime":time,"startGrabTime":time,"endGrabTime":time}
-	test.insert_one(a)
+
+	items = {}
+	items['siteDomain'] ='www.aa.comm'
+	items['siteName'] ='aa'
+	items['webPageCount'] = 0
+	items['totalOutLinkCuont'] = 0
+	items['siteStatus'] ='NEW'
+	items['siteType'] ='seed'
+	items['createTime'] = time
+	items['startGrabTime'] = time
+	items['endGrabTime'] = time
+
+	result = test.query_grab_site_by_status(items)
+	print 'query_grab_site_by_status = '
+	print result
+	result = test.query_grab_site_by_domain(items)
+	print 'query_grab_site_by_status = '
+	print result
+
+
+
+def test_update():
+	link = mysqlConnector()
+	connect = link.openDb('172.16.111.87','root','','Spider')
+	test = GrabSite(connect)
+	time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+	#time = datetime.datetime.now()
+
+	items = {}
+	items['siteDomain'] ='www.aa.comm'
+	items['siteName'] ='aa'
+	items['webPageCount'] = 0
+	items['totalOutLinkCuont'] = 0
+	items['siteStatus'] ='FINISH'
+	items['siteType'] ='seed'
+	items['createTime'] = time
+	items['startGrabTime'] = time
+	items['endGrabTime'] = time
+
+	test.update(items)
+	print 'update successed'
+
+
+
+
+
+if __name__ == '__main__':
+	test_query()
+	test_update()
+
+
+
+
 
 
