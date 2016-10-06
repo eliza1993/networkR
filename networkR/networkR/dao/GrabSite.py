@@ -42,25 +42,49 @@ class GrabSite(object):
 
 
 	def query_grab_site_by_status(self,items = {}):
-		query_sql =  "select * from GrabSite where siteStatus = '%s'" % (items['siteStatus'])
+		query_sql =  "select id,siteDomain,siteName,webPageCount,totalOutLinkCuont,siteStatus ,siteType ,createTime,startGrabTime,endGrabTime from GrabSite where siteStatus = '%s'" % (items['siteStatus'])
 		cursor = self.get_cursor()
 		cursor.execute(query_sql)
 		results = cursor.fetchall()
+		item = None
 		if len(results) > 0:
-			return results[0]
-		return results
+			item = {}
+			result =  results[0]
+			item['id'] = result[0]
+			item['siteDomain'] = result[0]
+			item['siteName'] = result[0]
+			item['webPageCount'] = result[0]
+			item['totalOutLinkCuont'] = result[0]
+			item['siteStatus'] = result[0]
+			item['siteType'] = result[0]
+			item['createTime'] = result[0]
+			item['startGrabTime'] = result[0]
+			item['endGrabTime'] = result[0]
+
+		return item
 
 	def query_grab_site_by_domain(self,items = {}):
-		query_sql =  "select * from GrabSite where siteDomain = '%s'" % (items['siteDomain'])
+		query_sql =  "select id,siteDomain,siteName,webPageCount,totalOutLinkCuont,siteStatus ,siteType ,createTime,startGrabTime,endGrabTime from GrabSite where siteDomain = '%s'" % (items['siteDomain'])
 		cursor = self.get_cursor()
 		cursor.execute(query_sql)
 		results = cursor.fetchall()
+		
+		item = None
 		if len(results) > 0:
-			return results[0]
-		return results
+			item = {}
+			result =  results[0]
+			item['id'] = result[0]
+			item['siteDomain'] = result[0]
+			item['siteName'] = result[0]
+			item['webPageCount'] = result[0]
+			item['totalOutLinkCuont'] = result[0]
+			item['siteStatus'] = result[0]
+			item['siteType'] = result[0]
+			item['createTime'] = result[0]
+			item['startGrabTime'] = result[0]
+			item['endGrabTime'] = result[0]
 
-	def query(self,items = []):
-		pass
+		return item
 
 	def update(self,items = []):
 		update_sql = "update GrabSite set siteStatus = %s where siteDomain = %s" #% (items['siteStatus'],items['siteDomain'])
