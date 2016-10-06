@@ -108,14 +108,14 @@ class GrabSite(object):
 			print ' no record'
 			return
 
-
-
-
-		update_sql = "update GrabSite set  where siteDomain = %s" #% (items['siteStatus'],items['siteDomain'])
+		webPageCount = result[0] + items['webPageCount']
+		totalOutLinkCuont = result[1] + items['totalOutLinkCuont']
+		update_sql = "update GrabSite set webPageCount = %s, totalOutLinkCuont = %s where siteDomain = %s" #% (items['siteStatus'],items['siteDomain'])
+		
 		
 		item_value = []
-
-		item_value.append(items['siteStatus'])
+		item_value.append(webPageCount)
+		item_value.append(totalOutLinkCuont)
 		item_value.append(items['siteDomain'])
 
 		cursor = self.get_cursor()
