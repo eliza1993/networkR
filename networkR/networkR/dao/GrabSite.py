@@ -93,6 +93,7 @@ class GrabSite(object):
 
 		item_value.append(items['siteStatus'])
 		item_value.append(items['siteDomain'])
+		print item_value
 
 		cursor = self.get_cursor()
 		cursor.execute(update_sql,item_value)
@@ -102,8 +103,9 @@ class GrabSite(object):
 	def update_count(self,items = {}):
 		query_sql =  "select webPageCount,totalOutLinkCuont from GrabSite where siteDomain = '%s'" % (items['siteDomain'])
 		cursor = self.get_cursor()
-		cursor.execute(query_sql)
+		cursor.execute(query_sql,)
 		result = cursor.fetchone()
+
 		if result is None:
 			print ' no record'
 			return
@@ -132,7 +134,7 @@ def test_query():
 	#time = datetime.datetime.now()
 
 	items = {}
-	items['siteDomain'] ='www.aa.comm'
+	items['siteDomain'] ='www.hello.com'
 	items['siteName'] ='aa'
 	items['webPageCount'] = 0
 	items['totalOutLinkCuont'] = 0
@@ -159,11 +161,11 @@ def test_update():
 	#time = datetime.datetime.now()
 
 	items = {}
-	items['siteDomain'] ='www.aa.comm'
-	items['siteName'] ='aa'
-	items['webPageCount'] = 0
-	items['totalOutLinkCuont'] = 0
-	items['siteStatus'] ='FINISH'
+	items['siteDomain'] ='www.hello.com'
+	items['siteName'] ='hello'
+	items['webPageCount'] = 6
+	items['totalOutLinkCuont'] = 8
+	items['siteStatus'] ='FINI'
 	items['siteType'] ='seed'
 	items['createTime'] = time
 	items['startGrabTime'] = time
@@ -171,13 +173,15 @@ def test_update():
 
 	test.update(items)
 	print 'update successed'
+	test.update_count(items)
+	print 'update count successed'
 
 
 
 
 
 if __name__ == '__main__':
-	test_query()
+	#test_query()
 	test_update()
 
 
