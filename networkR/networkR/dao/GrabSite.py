@@ -1,18 +1,16 @@
 import MySQLdb
 
-import mysqlConnector
+from mysqlConnector import mysqlConnector
 class GrabSite(object):
 	"""docstring for GrabSite"""
 
-	insert_sql = "insert into "+
-	"GrabSite(siteDomain,siteName,webPageCount,totalOutLinkCuont,siteStatus,siteType,createTime,startGrabTime,endGrabTime) "+
-	"values(%s,%s,%d,%d,%s,%s,%s,%s,%s);"
+	insert_sql = "insert into "+"GrabSite(siteDomain,siteName,webPageCount,totalOutLinkCuont,siteStatus,siteType,createTime,startGrabTime,endGrabTime) "+"values(%s,%s,%d,%d,%s,%s,%s,%s,%s);"
 	def __init__(self,mysqlConn):
 		self.mysqlConn = mysqlConn
 
 
 	def get_cursor(self):
-		return mysqlConn.cursor()
+		return self.mysqlConn.cursor()
 
 	def insert_one(self,items = {}):
 		if items is None:
@@ -66,6 +64,14 @@ class GrabSite(object):
 		cursor = self.get_cursor()
 		cursor.execute()
 		conn.commit()
+
+
+
+if __name__ == '__main__':
+	mysqlConn = mysqlConnector()
+	dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
+	gbSite = GrabSite(dbConn)
+	print 'test'
 
 
 
