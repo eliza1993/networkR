@@ -9,6 +9,7 @@ import datetime
 
 from dao.SiteGrabHistory import SiteGrabHistory
 from dao.SiteRelation import SiteRelation
+from dao.SiteGrab import SiteGrab
 
 class NetworkrPipeline(object):
 	"""
@@ -18,6 +19,7 @@ class NetworkrPipeline(object):
 	siteReDic = {}
 	siteRelation = None
 	siteGrabHis = None
+	siteGb = None
 
 
 	def __init__(self):
@@ -34,6 +36,11 @@ class NetworkrPipeline(object):
 		mysqlConn = mysqlConnector()
         dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
         siteRelation = SiteRelation(dbConn)
+
+	def init_site_grab(self):
+		mysqlConn = mysqlConnector()
+        dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
+        siteGb = SiteGrab(dbConn)
 
 	def process_item(self, item, spider):
 		"""
@@ -86,8 +93,7 @@ class NetworkrPipeline(object):
 			siteGrabHis.update(insertItems);
 
 
-			
-
+			siteGb.update_count(insertItems)
 
 
 	def get_domain(self,url):
