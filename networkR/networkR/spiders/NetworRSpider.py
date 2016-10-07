@@ -1,17 +1,17 @@
 import scrapy
-
+import datetime
 from networkR.items import NetworkrItem
 from networkR.dao.GrabSite import GrabSite
 from networkR.dao.mysqlConnector import mysqlConnector
 from networkR.dao.SiteGrabHistory import SiteGrabHistory
 
-import networkR.util.UrlUtil
+from networkR.util.UrlUtil import *
 
 class NetworRSpider(scrapy.Spider):
     name = "networkr"
     allowed_domains = ["taozhanggui.com"]
     start_urls = [
-        "www.taozhanggui.com"
+        "http://www.taozhanggui.com"
     ]
 
     gbSite = None
@@ -23,8 +23,8 @@ class NetworRSpider(scrapy.Spider):
         self.init_site_grab_history()
 
 
-    def start_requests():
-        if start_urls and len(start_urls) > 0:
+    def start_requests(self):
+        if self.start_urls and len(self.start_urls) > 0:
             self.handle_start_url()
 
         urls = self.plan_next_excute_urls()
@@ -42,14 +42,16 @@ class NetworRSpider(scrapy.Spider):
 
         item = self.parse_item(url,response)
 
+        return item
+
 
     def parse_item(self,url,response):
         item = NetworkrItem()
-        item['domain'] = get_domain(url)
+        item['siteDomain'] = get_domain(url)
         item['url'] = handle_url(url)
-        innerPageArray,outPageArray = self.parse_page_links(item['domain'],response)
+        innerPageArray,outPageArray = self.parse_page_links(item['siteDomain'],response)
         item['innerPageArray'] = innerPageArray
-        item['outPageArray'] outPageArray
+        item['outPageArray'] = outPageArray
 
         return item
 
@@ -61,7 +63,11 @@ class NetworRSpider(scrapy.Spider):
         totalLinks = []
         for aItem in response.xpath('//a'):
             link = aItem.xpath('@href').extract()
-            totalLinks.append(link)
+            if len(link) > 0:
+                url = self.link_filter(domain,link[0])
+                if not(url is None):
+                    totalLinks.append(url)        
+            
         
         for link in totalLinks:
             if domain in link:
@@ -72,62 +78,89 @@ class NetworRSpider(scrapy.Spider):
         return (innerPageArray,outPageArray)
 
 
+    def link_filter(self,domain,link):
+        if link is None:
+            return link
+
+        if 'javascript' in link:
+            return None
+
+        if 'http' in link:
+            return link
+
+        if 'www' in link:
+            return link
+
+        if '.com' in link:
+            return link
+
+        if '.cn' in link:
+            return link
+        if not(domain in link):
+            link = domain + '/' + link
+
+        return link;
+
+
     def handle_start_url(self):
         items = {}
         items['siteDomain'] = ''
-        for url in start_urls:
-            items['siteDomain'] = url;
-            result = gbSite.query_grab_site_by_domain(items)
+        for url in self.start_urls:
+            items['siteDomain'] = get_domain(url);
+            result = self.gbSite.query_grab_site_by_domain(items)
             if result is None:
-                items['siteDomain'] = url
+                items['siteDomain'] = get_domain(url)
                 items['siteName'] = url
                 items['webPageCount'] = 0
                 items['totalOutLinkCuont'] = 0
-                items['siteStatus'] = 'WAIT' 
+                items['siteStatus'] = 'NEW' 
                 items['siteType'] = 'seed'
                 items['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
                 items['startGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
                 items['endGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
-                gbSite.insert_one(items)
+                self.gbSite.insert_one(items)
 
 
     def init_gb_site(self):
         mysqlConn = mysqlConnector()
-        dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
-        gbSite = GrabSite(dbConn)
+        dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
+        self.gbSite = GrabSite(dbConn)
 
     def init_site_grab_history(self):
         mysqlConn = mysqlConnector()
-        dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
-        gbSiteHis = SiteGrabHistory(dbConn)
+        dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
+        self.gbSiteHis = SiteGrabHistory(dbConn)
 
 
     def plan_next_excute_urls(self):
         items = {}
         items['siteStatus'] = 'WORKING'
-        result = gbSite.query_grab_site_by_status(items)
-        if result not None:
+        result = self.gbSite.query_grab_site_by_status(items)
+        if not(result is None):
             hItems = {}
             hItems['siteDomain'] = result['siteDomain']
-            hItems['grabStatus'] = result['NEW']
-            result =  gbSiteHis.query_by_domain_and_status(hItems)
-            if result not None and len(result) > 0:
+            hItems['grabStatus'] = 'NEW'
+            result =  self.gbSiteHis.query_by_domain_and_status(hItems)
+            if not(result is None) and len(result) > 0:
                 urls = []
                 for res in result:
                     urls.append(res['url'])
 
                 return urls
 
-            hItems['siteDomain'] = result['siteDomain']
-            hItems['grabStatus'] = result['FINISH']
-            gbSite.update(hItems)
+            hItems['grabStatus'] = 'FINISH'
+            self.gbSite.update(hItems)
 
         
         items['siteStatus'] = 'NEW'
-        result = gbSite.query_grab_site_by_status(items)
-        if result not None:
+        result = self.gbSite.query_grab_site_by_status(items)
+        if not(result is None):
             urls = []
-            urls.append(res['siteDomain'])
+            urls.append(result['siteDomain'])
+            item = {}
+            item['siteStatus'] = 'WORKING'
+            item['siteDomain'] = result['siteDomain']
+            self.gbSite.update(item)
 
             return urls;
 

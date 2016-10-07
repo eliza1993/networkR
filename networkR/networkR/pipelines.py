@@ -7,9 +7,10 @@
 
 import datetime
 
-from dao.SiteGrabHistory import SiteGrabHistory
-from dao.SiteRelation import SiteRelation
-from dao.SiteGrab import SiteGrab
+from networkR.dao.SiteGrabHistory import SiteGrabHistory
+from networkR.dao.SiteRelation import SiteRelation
+from networkR.dao.GrabSite import GrabSite
+from networkR.dao.mysqlConnector import mysqlConnector
 
 class NetworkrPipeline(object):
 	"""
@@ -25,22 +26,23 @@ class NetworkrPipeline(object):
 	def __init__(self):
 		self.init_site_relation()
 		self.init_site_grab_his()
+		self.init_site_grab()
 
 
 	def init_site_relation(self):
 		mysqlConn = mysqlConnector()
-        dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
-        siteGrabHis = SiteGrabHistory(dbConn)
+		dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
+		self.siteGrabHis = SiteGrabHistory(dbConn)
 
 	def init_site_grab_his(self):
 		mysqlConn = mysqlConnector()
-        dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
-        siteRelation = SiteRelation(dbConn)
+		dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
+		self.siteRelation = SiteRelation(dbConn)
 
 	def init_site_grab(self):
 		mysqlConn = mysqlConnector()
-        dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
-        siteGb = SiteGrab(dbConn)
+		dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
+		self.siteGb = GrabSite(dbConn)
 
 	def process_item(self, item, spider):
 		"""
@@ -62,38 +64,40 @@ class NetworkrPipeline(object):
 		
 		for index in range(0,len(innerPageArray)):
 			insertItems["grabStatus"] = 'NEW'
-			insertItems["url"] = innerPageArray[i]
-			insertItems["domain"] = self.get_domain(innerPageArray[i])
+			insertItems["url"] = innerPageArray[index]
+			insertItems["siteDomain"] = self.get_domain(innerPageArray[index])
 			insertItems['innerPageCount'] = 0
-			insertItems['outPageCount'] = 0;
+			insertItems['outPageCount'] = 0
+			insertItems['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-			siteGrabHis.insert_one(insertItems);
+			self.siteGrabHis.insert_one(insertItems);
 
 
 
 		for index in range(0,len(outPageArray)):
 			insertItems["grabStatus"] = 'NEW'
-			insertItems["url"] = outPageArray[i]
-			insertItems["domain"] = self.get_domain(outPageArray[i])
+			insertItems["url"] = outPageArray[index]
+			insertItems["siteDomain"] = self.get_domain(outPageArray[index])
 			insertItems['innerPageCount'] = 0
-			insertItems['outPageCount'] = 0;
+			insertItems['outPageCount'] = 0
+			insertItems['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-			siteGrabHis.insert_one(insertItems);
+			self.siteGrabHis.insert_one(insertItems);
 			#建立 site relation 关系
-			self.handle_site_relation(item['domain'],insertItems["domain"])
+			self.handle_site_relation(item['siteDomain'],insertItems["siteDomain"])
 
 
 
 			insertItems["grabStatus"] = 'FINISH'
 			insertItems["url"] = item['url']
-			insertItems["domain"] = item['domain']
+			insertItems["siteDomain"] = item['siteDomain']
 			insertItems['innerPageCount'] = len(innerPageArray)
 			insertItems['outPageCount'] = len(outPageArray)
 			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
-			siteGrabHis.update(insertItems);
+			self.siteGrabHis.update(insertItems);
 
 
-			siteGb.update_count(insertItems)
+			self.siteGb.update_count(insertItems)
 
 
 	def get_domain(self,url):
@@ -115,14 +119,14 @@ class NetworkrPipeline(object):
 
 
 	def close_spider(self, spider):
-		siteGrabHis.close
-
+		pass
 
 	def handle_site_relation(self,masterSite,outLinkSite):
 		if self.has_site_relation(masterSite,outLinkSite):
 			self.increase(masterSite,outLinkSite)
 			return
 
+		items = {}
 		items['masterSite'] = masterSite;
 		items['outLinkSite'] = outLinkSite
 		items['outLinkCount'] = 0
@@ -134,18 +138,20 @@ class NetworkrPipeline(object):
 
 	def has_site_relation(self,masterSite,outLinkSite):
 		key = masterSite + "_" + outLinkSite
-		if siteReDic.has_key(key):
+		if self.siteReDic.has_key(key):
 			return True
 
+		items = {}
 		items['masterSite'] = masterSite;
 		items['outLinkSite'] = outLinkSite;
-		return siteRelation.has_site_relation(items)
+		return self.siteRelation.has_site_relation(items)
 
 	def increase(self,masterSite,outLinkSite):
+		items = {}
 		items['masterSite'] = masterSite;
 		items['outLinkSite'] = outLinkSite;
 
-		siteRelation.increase_one(items)
+		self.siteRelation.increase_one(items)
 
 
 
