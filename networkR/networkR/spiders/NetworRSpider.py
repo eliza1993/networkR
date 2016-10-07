@@ -42,6 +42,8 @@ class NetworRSpider(scrapy.Spider):
 
         item = self.parse_item(url,response)
 
+        return item
+
 
     def parse_item(self,url,response):
         item = NetworkrItem()
@@ -94,7 +96,7 @@ class NetworRSpider(scrapy.Spider):
 
         if '.cn' in link:
             return link
-        if domain not in link:
+        if not(domain in link):
             link = domain + '/' + link
 
         return link;

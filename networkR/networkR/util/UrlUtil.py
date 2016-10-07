@@ -20,13 +20,15 @@ def handle_url(url = None):
         return url
 
     if 'http://' in url:
-        url = url[0:7]
+        url = url[7:]
 
     if 'https://' in url:
-        url = url[0:8]
+        url = url[8:]
     
     if '?' in url:
         index = url.index('?')
         url = url[0:index]
 
     return url
+
+
