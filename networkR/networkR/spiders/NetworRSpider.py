@@ -106,7 +106,7 @@ class NetworRSpider(scrapy.Spider):
         items = {}
         items['siteDomain'] = ''
         for url in self.start_urls:
-            items['siteDomain'] = url;
+            items['siteDomain'] = get_domain(url);
             result = self.gbSite.query_grab_site_by_domain(items)
             if result is None:
                 items['siteDomain'] = get_domain(url)
@@ -139,7 +139,7 @@ class NetworRSpider(scrapy.Spider):
         if not(result is None):
             hItems = {}
             hItems['siteDomain'] = result['siteDomain']
-            hItems['grabStatus'] = 'WORKING'
+            hItems['grabStatus'] = 'NEW'
             result =  self.gbSiteHis.query_by_domain_and_status(hItems)
             if not(result is None) and len(result) > 0:
                 urls = []
@@ -148,8 +148,8 @@ class NetworRSpider(scrapy.Spider):
 
                 return urls
 
-            hItems['siteDomain'] = result['siteDomain']
-            hItems['grabStatus'] = result['FINISH']
+            hItems['siteDomain'] = 
+            hItems['grabStatus'] = 'FINISH'
             self.gbSite.update(hItems)
 
         
