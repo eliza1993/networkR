@@ -116,7 +116,6 @@ class NetworkrPipeline(object):
 
 
 	def close_spider(self, spider):
-		self.siteGrabHis.close
 
 
 	def handle_site_relation(self,masterSite,outLinkSite):
