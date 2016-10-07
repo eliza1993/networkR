@@ -26,6 +26,7 @@ class NetworkrPipeline(object):
 	def __init__(self):
 		self.init_site_relation()
 		self.init_site_grab_his()
+		self.init_site_grab()
 
 
 	def init_site_relation(self):
