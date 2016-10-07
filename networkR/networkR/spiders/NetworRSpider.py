@@ -139,7 +139,7 @@ class NetworRSpider(scrapy.Spider):
         if not(result is None):
             hItems = {}
             hItems['siteDomain'] = result['siteDomain']
-            hItems['grabStatus'] = 'NEW'
+            hItems['grabStatus'] = 'WORKING'
             result =  self.gbSiteHis.query_by_domain_and_status(hItems)
             if not(result is None) and len(result) > 0:
                 urls = []
