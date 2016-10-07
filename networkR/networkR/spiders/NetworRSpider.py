@@ -96,6 +96,10 @@ class NetworRSpider(scrapy.Spider):
 
         if '.cn' in link:
             return link
+
+        if '.net' in link:
+            return link
+            
         if not(domain in link):
             link = domain + '/' + link
 

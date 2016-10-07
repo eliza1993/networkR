@@ -1,11 +1,11 @@
 
 
 def get_domain(url):
-	if 'http://' in url:
-		url = url[7:]
+	# if 'http://' in url:
+	# 	url = url[7:]
 
-	if 'https://' in url:
-		url = url[8:]
+	# if 'https://' in url:
+	# 	url = url[8:]
 
 	if '/' in url:
 		index = url.index('/')
@@ -19,11 +19,11 @@ def handle_url(url = None):
     if url is None:
         return url
 
-    if 'http://' in url:
-        url = url[7:]
+    # if 'http://' in url:
+    #     url = url[7:]
 
-    if 'https://' in url:
-        url = url[8:]
+    # if 'https://' in url:
+    #     url = url[8:]
     
     if '?' in url:
         index = url.index('?')

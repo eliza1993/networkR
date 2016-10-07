@@ -101,11 +101,11 @@ class NetworkrPipeline(object):
 
 
 	def get_domain(self,url):
-		if 'http://' in url:
-			url = url[7:]
+		# if 'http://' in url:
+		# 	url = url[7:]
 
-		if 'https://' in url:
-			url = url[8:]
+		# if 'https://' in url:
+		# 	url = url[8:]
 
 		if '/' in url:
 			index = url.index('/')
