@@ -9,6 +9,9 @@ class SiteGrabHistory(object):
 	def get_cursor(self):
 		return self.mysqlConn.cursor()
 	def insert_one(self,items = []):
+		if self.has_url(items):
+			return
+			
 		insert_sql = "insert into SiteGrabHistory(siteDomain,url,grabStatus,innerPageCount,outPageCount,createTime,lastUpdateTime) "+"values(%s,%s,%s,%s,%s,%s,%s)"
 
 		insert_item  = []
@@ -22,6 +25,17 @@ class SiteGrabHistory(object):
 		cursor = self.get_cursor()
 		cursor.execute(insert_sql,insert_item)
 		self.mysqlConn.commit()
+
+
+	def has_url(self,items = {}):
+		query_sql = "select * from SiteGrabHistory where url = '%s' " % (items['url'])
+		cursor = self.get_cursor()
+		cursor.execute(query_sql)
+		results = cursor.fetchall()
+		if len(results) > 0:
+			return True
+
+		return False
 		
 
 
