@@ -9,9 +9,9 @@ from networkR.util.UrlUtil import *
 
 class NetworRSpider(scrapy.Spider):
     name = "networkr"
-    allowed_domains = ["taozhanggui.com"]
+    allowed_domains = ["www.i7gou.com"]
     start_urls = [
-        "http://www.taozhanggui.com"
+        "http://www.i7gou.com"
     ]
 
     gbSite = None
