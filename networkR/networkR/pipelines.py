@@ -147,6 +147,7 @@ class NetworkrPipeline(object):
 		return self.siteRelation.has_site_relation(items)
 
 	def increase(self,masterSite,outLinkSite):
+		items = {}
 		items['masterSite'] = masterSite;
 		items['outLinkSite'] = outLinkSite;
 
