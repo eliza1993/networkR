@@ -5,7 +5,7 @@ from networkR.dao.GrabSite import GrabSite
 from networkR.dao.mysqlConnector import mysqlConnector
 from networkR.dao.SiteGrabHistory import SiteGrabHistory
 
-import networkR.util.UrlUtil
+from networkR.util.UrlUtil import *
 
 class NetworRSpider(scrapy.Spider):
     name = "networkr"
@@ -23,8 +23,8 @@ class NetworRSpider(scrapy.Spider):
         self.init_site_grab_history()
 
 
-    def start_requests():
-        if start_urls and len(start_urls) > 0:
+    def start_requests(self):
+        if self.start_urls and len(self.start_urls) > 0:
             self.handle_start_url()
 
         urls = self.plan_next_excute_urls()
