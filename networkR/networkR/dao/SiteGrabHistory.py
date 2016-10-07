@@ -95,7 +95,7 @@ def test_update(siteGbHis):
 
 if __name__ == '__main__':
 	link = mysqlConnector()
-	connect = link.openDb('172.16.111.87','root','','Spider')
+	connect = link.openDb('192.168.31.160','root','','Spider')
 	siteGbHis = SiteGrabHistory(connect)
 
 	#test_insert_one(siteGbHis)

@@ -112,7 +112,7 @@ class GrabSite(object):
 		totalOutLinkCuont = result[1] + items['totalOutLinkCuont']
 		update_sql = "update GrabSite set webPageCount = %s, totalOutLinkCuont = %s where siteDomain = %s" #% (items['siteStatus'],items['siteDomain'])
 		
-		
+
 		item_value = []
 		item_value.append(webPageCount)
 		item_value.append(totalOutLinkCuont)
@@ -126,7 +126,7 @@ class GrabSite(object):
 
 def test_query():
 	link = mysqlConnector()
-	connect = link.openDb('172.16.111.87','root','','Spider')
+	connect = link.openDb('192.168.31.160','root','','Spider')
 	test = GrabSite(connect)
 	time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 	#time = datetime.datetime.now()
@@ -153,7 +153,7 @@ def test_query():
 
 def test_update():
 	link = mysqlConnector()
-	connect = link.openDb('172.16.111.87','root','','Spider')
+	connect = link.openDb('192.168.31.160','root','','Spider')
 	test = GrabSite(connect)
 	time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 	#time = datetime.datetime.now()

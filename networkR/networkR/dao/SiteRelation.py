@@ -72,7 +72,7 @@ def test_increase_one(siteRel):
 
 if __name__ == '__main__':
 	link = mysqlConnector()
-	connect = link.openDb('172.16.111.87','root','','Spider')
+	connect = link.openDb('192.168.31.160','root','','Spider')
 	siteRel = SiteRelation(connect)
 
 	#test_insert_one(siteRel)

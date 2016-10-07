@@ -29,17 +29,17 @@ class NetworkrPipeline(object):
 
 	def init_site_relation(self):
 		mysqlConn = mysqlConnector()
-        dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
+        dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
         siteGrabHis = SiteGrabHistory(dbConn)
 
 	def init_site_grab_his(self):
 		mysqlConn = mysqlConnector()
-        dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
+        dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
         siteRelation = SiteRelation(dbConn)
 
 	def init_site_grab(self):
 		mysqlConn = mysqlConnector()
-        dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
+        dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
         siteGb = SiteGrab(dbConn)
 
 	def process_item(self, item, spider):

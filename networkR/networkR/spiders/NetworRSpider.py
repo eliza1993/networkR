@@ -61,7 +61,11 @@ class NetworRSpider(scrapy.Spider):
         totalLinks = []
         for aItem in response.xpath('//a'):
             link = aItem.xpath('@href').extract()
-            totalLinks.append(link)
+            if len(link) > 0:
+                url = self.link_filter(domain,link[0])
+                if not None:
+                    totalLinks.append(url)        
+            
         
         for link in totalLinks:
             if domain in link:
@@ -70,6 +74,30 @@ class NetworRSpider(scrapy.Spider):
                 outPageArray.append(handle_url(link))
 
         return (innerPageArray,outPageArray)
+
+
+    def link_filter(self,domain,link):
+        if link is None:
+            return link
+
+        if 'javascript' in link:
+            return None
+
+        if 'http' in link:
+            return link
+
+        if 'www' in link:
+            return link
+
+        if '.com' in link:
+            return link
+
+        if '.cn' in link:
+            return link
+        if domain not in link:
+            link = domain + '/' + link
+
+        return link;
 
 
     def handle_start_url(self):
@@ -93,12 +121,12 @@ class NetworRSpider(scrapy.Spider):
 
     def init_gb_site(self):
         mysqlConn = mysqlConnector()
-        dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
+        dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
         gbSite = GrabSite(dbConn)
 
     def init_site_grab_history(self):
         mysqlConn = mysqlConnector()
-        dbConn = mysqlConn.openDb('172.16.111.87','root','','Spider')
+        dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
         gbSiteHis = SiteGrabHistory(dbConn)
 
 
