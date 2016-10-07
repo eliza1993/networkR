@@ -83,7 +83,7 @@ class NetworkrPipeline(object):
 			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 			self.siteGrabHis.insert_one(insertItems);
 			#建立 site relation 关系
-			self.handle_site_relation(insertItems['siteDomain'],insertItems["siteDomain"])
+			self.handle_site_relation(item['siteDomain'],insertItems["siteDomain"])
 
 
 
@@ -139,6 +139,7 @@ class NetworkrPipeline(object):
 		if self.siteReDic.has_key(key):
 			return True
 
+		items = {}
 		items['masterSite'] = masterSite;
 		items['outLinkSite'] = outLinkSite;
 		return self.siteRelation.has_site_relation(items)
