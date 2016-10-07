@@ -51,15 +51,15 @@ class GrabSite(object):
 			item = {}
 			result =  results[0]
 			item['id'] = result[0]
-			item['siteDomain'] = result[0]
-			item['siteName'] = result[0]
-			item['webPageCount'] = result[0]
-			item['totalOutLinkCuont'] = result[0]
-			item['siteStatus'] = result[0]
-			item['siteType'] = result[0]
-			item['createTime'] = result[0]
-			item['startGrabTime'] = result[0]
-			item['endGrabTime'] = result[0]
+			item['siteDomain'] = result[1]
+			item['siteName'] = result[2]
+			item['webPageCount'] = result[3]
+			item['totalOutLinkCuont'] = result[4]
+			item['siteStatus'] = result[5]
+			item['siteType'] = result[6]
+			item['createTime'] = result[7]
+			item['startGrabTime'] = result[8]
+			item['endGrabTime'] = result[9]
 
 		return item
 
@@ -74,20 +74,20 @@ class GrabSite(object):
 			item = {}
 			result =  results[0]
 			item['id'] = result[0]
-			item['siteDomain'] = result[0]
-			item['siteName'] = result[0]
-			item['webPageCount'] = result[0]
-			item['totalOutLinkCuont'] = result[0]
-			item['siteStatus'] = result[0]
-			item['siteType'] = result[0]
-			item['createTime'] = result[0]
-			item['startGrabTime'] = result[0]
-			item['endGrabTime'] = result[0]
+			item['siteDomain'] = result[1]
+			item['siteName'] = result[2]
+			item['webPageCount'] = result[3]
+			item['totalOutLinkCuont'] = result[4]
+			item['siteStatus'] = result[5]
+			item['siteType'] = result[6]
+			item['createTime'] = result[7]
+			item['startGrabTime'] = result[8]
+			item['endGrabTime'] = result[9]
 
 		return item
 
 	def update(self,items = []):
-		update_sql = "update GrabSite set siteStatus = %s where siteDomain = %s" % (items['siteStatus'],items['siteDomain'])
+		update_sql = "update GrabSite set siteStatus = '%s' where siteDomain = '%s'" % (items['siteStatus'],items['siteDomain'])
 		
 		cursor = self.get_cursor()
 		cursor.execute(update_sql)
