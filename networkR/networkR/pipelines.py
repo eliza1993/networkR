@@ -10,6 +10,7 @@ import datetime
 from networkR.dao.SiteGrabHistory import SiteGrabHistory
 from networkR.dao.SiteRelation import SiteRelation
 from networkR.dao.GrabSite import GrabSite
+from networkR.dao.mysqlConnector import mysqlConnector
 
 class NetworkrPipeline(object):
 	"""
