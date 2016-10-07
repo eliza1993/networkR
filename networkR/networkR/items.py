@@ -11,7 +11,7 @@ import scrapy
 class NetworkrItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    domain = scrapy.Field()
+    siteDomain = scrapy.Field()
     url = scrapy.Field()
     innerPageArray = scrapy.Field()
     outPageArray = scrapy.Field()
