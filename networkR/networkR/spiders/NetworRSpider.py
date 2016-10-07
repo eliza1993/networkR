@@ -158,6 +158,7 @@ class NetworRSpider(scrapy.Spider):
         if not(result is None):
             urls = []
             urls.append(result['siteDomain'])
+            item = {}
             item['siteStatus'] = 'WORKING'
             item['siteDomain'] = result['siteDomain']
             self.gbSite.update(item)
