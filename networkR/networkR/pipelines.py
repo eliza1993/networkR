@@ -125,6 +125,7 @@ class NetworkrPipeline(object):
 			self.increase(masterSite,outLinkSite)
 			return
 
+		items = {}
 		items['masterSite'] = masterSite;
 		items['outLinkSite'] = outLinkSite
 		items['outLinkCount'] = 0
