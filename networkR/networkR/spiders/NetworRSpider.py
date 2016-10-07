@@ -28,7 +28,7 @@ class NetworRSpider(scrapy.Spider):
             self.handle_start_url()
 
         urls = self.plan_next_excute_urls()
-        for url in self.start_urls:
+        for url in urls:
             yield self.make_requests_from_url(url)
 
 
