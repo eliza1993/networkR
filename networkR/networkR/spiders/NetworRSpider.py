@@ -1,5 +1,5 @@
 import scrapy
-
+import datetime
 from networkR.items import NetworkrItem
 from networkR.dao.GrabSite import GrabSite
 from networkR.dao.mysqlConnector import mysqlConnector
@@ -11,7 +11,7 @@ class NetworRSpider(scrapy.Spider):
     name = "networkr"
     allowed_domains = ["taozhanggui.com"]
     start_urls = [
-        "www.taozhanggui.com"
+        "http://www.taozhanggui.com"
     ]
 
     gbSite = None
@@ -107,11 +107,11 @@ class NetworRSpider(scrapy.Spider):
             items['siteDomain'] = url;
             result = self.gbSite.query_grab_site_by_domain(items)
             if result is None:
-                items['siteDomain'] = url
+                items['siteDomain'] = get
                 items['siteName'] = url
                 items['webPageCount'] = 0
                 items['totalOutLinkCuont'] = 0
-                items['siteStatus'] = 'WAIT' 
+                items['siteStatus'] = 'NEW' 
                 items['siteType'] = 'seed'
                 items['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
                 items['startGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
@@ -155,7 +155,7 @@ class NetworRSpider(scrapy.Spider):
         result = self.gbSite.query_grab_site_by_status(items)
         if not(result is None):
             urls = []
-            urls.append(res['siteDomain'])
+            urls.append(result['siteDomain'])
 
             return urls;
 
