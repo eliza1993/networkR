@@ -42,7 +42,7 @@ class NetworkrPipeline(object):
 	def init_site_grab(self):
 		mysqlConn = mysqlConnector()
 		dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
-		self.siteGb = SiteGrab(dbConn)
+		self.siteGb = GrabSite(dbConn)
 
 	def process_item(self, item, spider):
 		"""
