@@ -96,7 +96,7 @@ class NetworkrPipeline(object):
 				gbSiteItem['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
 				gbSiteItem['startGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
 				gbSiteItem['endGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
-				self.gbSite.insert_one(gbSiteItem)
+				self.siteGb.insert_one(gbSiteItem)
 
 			#建立 site relation 关系
 			self.handle_site_relation(item['siteDomain'],insertItems["siteDomain"])
