@@ -63,8 +63,8 @@ class NetworkrPipeline(object):
 		
 		for index in range(0,len(innerPageArray)):
 			insertItems["grabStatus"] = 'NEW'
-			insertItems["url"] = innerPageArray[i]
-			insertItems["domain"] = self.get_domain(innerPageArray[i])
+			insertItems["url"] = innerPageArray[index]
+			insertItems["domain"] = self.get_domain(innerPageArray[index])
 			insertItems['innerPageCount'] = 0
 			insertItems['outPageCount'] = 0;
 			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -74,8 +74,8 @@ class NetworkrPipeline(object):
 
 		for index in range(0,len(outPageArray)):
 			insertItems["grabStatus"] = 'NEW'
-			insertItems["url"] = outPageArray[i]
-			insertItems["domain"] = self.get_domain(outPageArray[i])
+			insertItems["url"] = outPageArray[index]
+			insertItems["domain"] = self.get_domain(outPageArray[index])
 			insertItems['innerPageCount'] = 0
 			insertItems['outPageCount'] = 0;
 			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
