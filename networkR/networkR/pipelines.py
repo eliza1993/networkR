@@ -88,15 +88,15 @@ class NetworkrPipeline(object):
 			if not self.siteGbDic.has_key(insertItems["siteDomain"]):
 				gbSiteItem = {}
 				gbSiteItem['siteDomain'] = insertItems["siteDomain"]
-                gbSiteItem['siteName'] = insertItems["siteDomain"]
-                gbSiteItem['webPageCount'] = 0
-                gbSiteItem['totalOutLinkCuont'] = 0
-                gbSiteItem['siteStatus'] = 'NEW' 
-                gbSiteItem['siteType'] = 'outlink'
-                gbSiteItem['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
-                gbSiteItem['startGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
-                gbSiteItem['endGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
-                self.gbSite.insert_one(gbSiteItem)
+				gbSiteItem['siteName'] = insertItems["siteDomain"]
+				gbSiteItem['webPageCount'] = 0
+				gbSiteItem['totalOutLinkCuont'] = 0
+				gbSiteItem['siteStatus'] = 'NEW' 
+				gbSiteItem['siteType'] = 'outlink'
+				gbSiteItem['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+				gbSiteItem['startGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+				gbSiteItem['endGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+				self.gbSite.insert_one(gbSiteItem)
 
 			#建立 site relation 关系
 			self.handle_site_relation(item['siteDomain'],insertItems["siteDomain"])
