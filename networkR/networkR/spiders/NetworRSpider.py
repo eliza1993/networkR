@@ -103,9 +103,9 @@ class NetworRSpider(scrapy.Spider):
     def handle_start_url(self):
         items = {}
         items['siteDomain'] = ''
-        for url in start_urls:
+        for url in self.start_urls:
             items['siteDomain'] = url;
-            result = gbSite.query_grab_site_by_domain(items)
+            result = self.gbSite.query_grab_site_by_domain(items)
             if result is None:
                 items['siteDomain'] = url
                 items['siteName'] = url
@@ -116,29 +116,29 @@ class NetworRSpider(scrapy.Spider):
                 items['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
                 items['startGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
                 items['endGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
-                gbSite.insert_one(items)
+                self.gbSite.insert_one(items)
 
 
     def init_gb_site(self):
         mysqlConn = mysqlConnector()
         dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
-        gbSite = GrabSite(dbConn)
+        self.gbSite = GrabSite(dbConn)
 
     def init_site_grab_history(self):
         mysqlConn = mysqlConnector()
         dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
-        gbSiteHis = SiteGrabHistory(dbConn)
+        self.gbSiteHis = SiteGrabHistory(dbConn)
 
 
     def plan_next_excute_urls(self):
         items = {}
         items['siteStatus'] = 'WORKING'
-        result = gbSite.query_grab_site_by_status(items)
+        result = self.gbSite.query_grab_site_by_status(items)
         if not(result is None):
             hItems = {}
             hItems['siteDomain'] = result['siteDomain']
             hItems['grabStatus'] = result['NEW']
-            result =  gbSiteHis.query_by_domain_and_status(hItems)
+            result =  self.gbSiteHis.query_by_domain_and_status(hItems)
             if not(result is None) and len(result) > 0:
                 urls = []
                 for res in result:
@@ -148,11 +148,11 @@ class NetworRSpider(scrapy.Spider):
 
             hItems['siteDomain'] = result['siteDomain']
             hItems['grabStatus'] = result['FINISH']
-            gbSite.update(hItems)
+            self.gbSite.update(hItems)
 
         
         items['siteStatus'] = 'NEW'
-        result = gbSite.query_grab_site_by_status(items)
+        result = self.gbSite.query_grab_site_by_status(items)
         if not(result is None):
             urls = []
             urls.append(res['siteDomain'])

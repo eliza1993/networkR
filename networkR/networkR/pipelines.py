@@ -30,17 +30,17 @@ class NetworkrPipeline(object):
 	def init_site_relation(self):
 		mysqlConn = mysqlConnector()
         dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
-        siteGrabHis = SiteGrabHistory(dbConn)
+        self.siteGrabHis = SiteGrabHistory(dbConn)
 
 	def init_site_grab_his(self):
 		mysqlConn = mysqlConnector()
         dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
-        siteRelation = SiteRelation(dbConn)
+        self.siteRelation = SiteRelation(dbConn)
 
 	def init_site_grab(self):
 		mysqlConn = mysqlConnector()
         dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
-        siteGb = SiteGrab(dbConn)
+        self.siteGb = SiteGrab(dbConn)
 
 	def process_item(self, item, spider):
 		"""
@@ -67,7 +67,7 @@ class NetworkrPipeline(object):
 			insertItems['innerPageCount'] = 0
 			insertItems['outPageCount'] = 0;
 			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-			siteGrabHis.insert_one(insertItems);
+			self.siteGrabHis.insert_one(insertItems);
 
 
 
@@ -78,7 +78,7 @@ class NetworkrPipeline(object):
 			insertItems['innerPageCount'] = 0
 			insertItems['outPageCount'] = 0;
 			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-			siteGrabHis.insert_one(insertItems);
+			self.siteGrabHis.insert_one(insertItems);
 			#建立 site relation 关系
 			self.handle_site_relation(item['domain'],insertItems["domain"])
 
@@ -90,10 +90,10 @@ class NetworkrPipeline(object):
 			insertItems['innerPageCount'] = len(innerPageArray)
 			insertItems['outPageCount'] = len(outPageArray)
 			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
-			siteGrabHis.update(insertItems);
+			self.siteGrabHis.update(insertItems);
 
 
-			siteGb.update_count(insertItems)
+			self.siteGb.update_count(insertItems)
 
 
 	def get_domain(self,url):
@@ -115,7 +115,7 @@ class NetworkrPipeline(object):
 
 
 	def close_spider(self, spider):
-		siteGrabHis.close
+		self.siteGrabHis.close
 
 
 	def handle_site_relation(self,masterSite,outLinkSite):
@@ -134,18 +134,18 @@ class NetworkrPipeline(object):
 
 	def has_site_relation(self,masterSite,outLinkSite):
 		key = masterSite + "_" + outLinkSite
-		if siteReDic.has_key(key):
+		if self.siteReDic.has_key(key):
 			return True
 
 		items['masterSite'] = masterSite;
 		items['outLinkSite'] = outLinkSite;
-		return siteRelation.has_site_relation(items)
+		return self.siteRelation.has_site_relation(items)
 
 	def increase(self,masterSite,outLinkSite):
 		items['masterSite'] = masterSite;
 		items['outLinkSite'] = outLinkSite;
 
-		siteRelation.increase_one(items)
+		self.siteRelation.increase_one(items)
 
 
 
