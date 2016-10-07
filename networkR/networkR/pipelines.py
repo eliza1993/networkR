@@ -116,7 +116,7 @@ class NetworkrPipeline(object):
 
 
 	def close_spider(self, spider):
-
+		pass
 
 	def handle_site_relation(self,masterSite,outLinkSite):
 		if self.has_site_relation(masterSite,outLinkSite):
