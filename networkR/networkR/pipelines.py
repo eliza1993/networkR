@@ -9,7 +9,7 @@ import datetime
 
 from networkR.dao.SiteGrabHistory import SiteGrabHistory
 from networkR.dao.SiteRelation import SiteRelation
-from networkR.dao.SiteGrab import SiteGrab
+from networkR.dao.GrabSite import GrabSite
 
 class NetworkrPipeline(object):
 	"""
