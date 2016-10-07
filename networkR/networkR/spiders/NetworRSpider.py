@@ -28,7 +28,7 @@ class NetworRSpider(scrapy.Spider):
             self.handle_start_url()
 
         urls = self.plan_next_excute_urls()
-        for url in self.start_urls:
+        for url in urls:
             yield self.make_requests_from_url(url)
 
 
@@ -96,6 +96,10 @@ class NetworRSpider(scrapy.Spider):
 
         if '.cn' in link:
             return link
+
+        if '.net' in link:
+            return link
+            
         if not(domain in link):
             link = domain + '/' + link
 

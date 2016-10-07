@@ -13,6 +13,10 @@ class GrabSite(object):
 		return self.mysqlConn.cursor()
 
 	def insert_one(self,items = {}):
+		item_one = self.query_grab_site_by_domain(items)
+		if not(item_one is None):
+			return
+
 		insert_sql = 'insert into ' + 'GrabSite(siteDomain,siteName,webPageCount,totalOutLinkCuont,siteStatus,siteType,createTime,startGrabTime,endGrabTime) '+ 'values(%s,%s,%s,%s,%s,%s,%s,%s,%s);'
 
 		if items is None:
@@ -36,7 +40,6 @@ class GrabSite(object):
 		item_value.append(items['endGrabTime'])
 
 		cursor = self.get_cursor()
-		print item_value
 		cursor.execute(insert_sql,item_value)
 		self.mysqlConn.commit()
 
