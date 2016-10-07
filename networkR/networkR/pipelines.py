@@ -64,7 +64,7 @@ class NetworkrPipeline(object):
 		for index in range(0,len(innerPageArray)):
 			insertItems["grabStatus"] = 'NEW'
 			insertItems["url"] = innerPageArray[index]
-			insertItems["domain"] = self.get_domain(innerPageArray[index])
+			insertItems["siteDomain"] = self.get_domain(innerPageArray[index])
 			insertItems['innerPageCount'] = 0
 			insertItems['outPageCount'] = 0;
 			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
