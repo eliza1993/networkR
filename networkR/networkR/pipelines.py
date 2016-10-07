@@ -66,7 +66,8 @@ class NetworkrPipeline(object):
 			insertItems["url"] = innerPageArray[index]
 			insertItems["siteDomain"] = self.get_domain(innerPageArray[index])
 			insertItems['innerPageCount'] = 0
-			insertItems['outPageCount'] = 0;
+			insertItems['outPageCount'] = 0
+			insertItems['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 			self.siteGrabHis.insert_one(insertItems);
 
@@ -75,19 +76,20 @@ class NetworkrPipeline(object):
 		for index in range(0,len(outPageArray)):
 			insertItems["grabStatus"] = 'NEW'
 			insertItems["url"] = outPageArray[index]
-			insertItems["domain"] = self.get_domain(outPageArray[index])
+			insertItems["siteDomain"] = self.get_domain(outPageArray[index])
 			insertItems['innerPageCount'] = 0
-			insertItems['outPageCount'] = 0;
+			insertItems['outPageCount'] = 0
+			insertItems['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 			self.siteGrabHis.insert_one(insertItems);
 			#建立 site relation 关系
-			self.handle_site_relation(item['domain'],insertItems["domain"])
+			self.handle_site_relation(item['siteDomain'],insertItems["siteDomain"])
 
 
 
 			insertItems["grabStatus"] = 'FINISH'
 			insertItems["url"] = item['url']
-			insertItems["domain"] = item['domain']
+			insertItems["siteDomain"] = item['siteDomain']
 			insertItems['innerPageCount'] = len(innerPageArray)
 			insertItems['outPageCount'] = len(outPageArray)
 			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
