@@ -87,15 +87,10 @@ class GrabSite(object):
 		return item
 
 	def update(self,items = []):
-		update_sql = "update GrabSite set siteStatus = %s where siteDomain = %s" #% (items['siteStatus'],items['siteDomain'])
+		update_sql = "update GrabSite set siteStatus = %s where siteDomain = %s" % (items['siteStatus'],items['siteDomain'])
 		
-		item_value = []
-
-		item_value.append(items['siteStatus'])
-		item_value.append(items['siteDomain'])
-
 		cursor = self.get_cursor()
-		cursor.execute(update_sql,item_value)
+		cursor.execute(update_sql)
 		self.mysqlConn.commit()
 
 
