@@ -47,9 +47,9 @@ class NetworRSpider(scrapy.Spider):
 
     def parse_item(self,url,response):
         item = NetworkrItem()
-        item['domain'] = get_domain(url)
+        item['siteDomain'] = get_domain(url)
         item['url'] = handle_url(url)
-        innerPageArray,outPageArray = self.parse_page_links(item['domain'],response)
+        innerPageArray,outPageArray = self.parse_page_links(item['siteDomain'],response)
         item['innerPageArray'] = innerPageArray
         item['outPageArray'] = outPageArray
 
@@ -109,7 +109,7 @@ class NetworRSpider(scrapy.Spider):
             items['siteDomain'] = url;
             result = self.gbSite.query_grab_site_by_domain(items)
             if result is None:
-                items['siteDomain'] = get
+                items['siteDomain'] = get_domain(url)
                 items['siteName'] = url
                 items['webPageCount'] = 0
                 items['totalOutLinkCuont'] = 0
