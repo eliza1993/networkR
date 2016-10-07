@@ -148,7 +148,6 @@ class NetworRSpider(scrapy.Spider):
 
                 return urls
 
-            hItems['siteDomain'] = 
             hItems['grabStatus'] = 'FINISH'
             self.gbSite.update(hItems)
 
