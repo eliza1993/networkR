@@ -49,7 +49,7 @@ class NetworRSpider(scrapy.Spider):
         item['url'] = handle_url(url)
         innerPageArray,outPageArray = self.parse_page_links(item['domain'],response)
         item['innerPageArray'] = innerPageArray
-        item['outPageArray'] outPageArray
+        item['outPageArray'] = outPageArray
 
         return item
 
@@ -63,7 +63,7 @@ class NetworRSpider(scrapy.Spider):
             link = aItem.xpath('@href').extract()
             if len(link) > 0:
                 url = self.link_filter(domain,link[0])
-                if not None:
+                if not(url is None):
                     totalLinks.append(url)        
             
         
@@ -134,12 +134,12 @@ class NetworRSpider(scrapy.Spider):
         items = {}
         items['siteStatus'] = 'WORKING'
         result = gbSite.query_grab_site_by_status(items)
-        if result not None:
+        if not(result is None):
             hItems = {}
             hItems['siteDomain'] = result['siteDomain']
             hItems['grabStatus'] = result['NEW']
             result =  gbSiteHis.query_by_domain_and_status(hItems)
-            if result not None and len(result) > 0:
+            if not(result is None) and len(result) > 0:
                 urls = []
                 for res in result:
                     urls.append(res['url'])
@@ -153,7 +153,7 @@ class NetworRSpider(scrapy.Spider):
         
         items['siteStatus'] = 'NEW'
         result = gbSite.query_grab_site_by_status(items)
-        if result not None:
+        if not(result is None):
             urls = []
             urls.append(res['siteDomain'])
 
