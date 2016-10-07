@@ -108,8 +108,8 @@ class GrabSite(object):
 			print ' no record'
 			return
 
-		webPageCount = result[0] + items['webPageCount']
-		totalOutLinkCuont = result[1] + items['totalOutLinkCuont']
+		webPageCount = result[0] + items['innerPageCount']
+		totalOutLinkCuont = result[1] + items['outPageCount']
 		update_sql = "update GrabSite set webPageCount = %s, totalOutLinkCuont = %s where siteDomain = %s" #% (items['siteStatus'],items['siteDomain'])
 		
 
