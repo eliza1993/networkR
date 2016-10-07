@@ -178,7 +178,7 @@ def test_update():
 
 if __name__ == '__main__':
 	test_query()
-	test_update()
+	#test_update()
 
 
 
