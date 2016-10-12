@@ -45,7 +45,7 @@ class NetworRSpider(scrapy.Spider):
         if response is None:
             return
 
-        if response.status != '200':
+        if response.status != 200:
             print "**********" 
             print response.status
             print "**********"
@@ -53,7 +53,11 @@ class NetworRSpider(scrapy.Spider):
 
         url = handle_url(response.url)
 
+        print '=====================2'
         item = self.parse_item(url,response)
+
+        print '=====================1'
+        print item
 
         return item
 
@@ -83,6 +87,7 @@ class NetworRSpider(scrapy.Spider):
         totalLinks = []
         for aItem in response.xpath('//a'):
             link = aItem.xpath('@href').extract()
+            print link
             if len(link) > 0:
                 url = self.link_filter(domain,link[0])
                 if not(url is None):
