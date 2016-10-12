@@ -12,11 +12,12 @@ class SiteGrabHistory(object):
 		if self.has_url(items):
 			return
 			
-		insert_sql = "insert into SiteGrabHistory(siteDomain,url,grabStatus,innerPageCount,outPageCount,createTime,lastUpdateTime) "+"values(%s,%s,%s,%s,%s,%s,%s)"
+		insert_sql = "insert into SiteGrabHistory(siteDomain,url,levels,grabStatus,innerPageCount,outPageCount,createTime,lastUpdateTime) "+"values(%s,%s,%s,%s,%s,%s,%s,%s)"
 
 		insert_item  = []
 		insert_item.append(items['siteDomain'])
 		insert_item.append(items['url'])
+		insert_item.append(items['levels'])
 		insert_item.append(items['grabStatus'])
 		insert_item.append(items['innerPageCount'])
 		insert_item.append(items['outPageCount'])
@@ -40,6 +41,30 @@ class SiteGrabHistory(object):
 
 
 	def query_by_domain_and_status(self,items = []):
+		query_sql = "select id,siteDomain,url,levels,grabStatus,innerPageCount,outPageCount,createTime,lastUpdateTime from SiteGrabHistory where siteDomain = '%s' and grabStatus = '%s' order by id asc limit 100" % (items['siteDomain'],items['grabStatus'])
+		cursor = self.get_cursor()
+		cursor.execute(query_sql)
+		results = cursor.fetchall()
+
+		items_res = []
+		if len(results) > 0:
+			for result in results:
+				item = {}
+				item['id'] = result[0]
+				item['siteDomain'] = result[1]
+				item['url'] = result[2]
+				item['grabStatus'] = result[3]
+				item['innerPageCount'] = result[4]
+				item['outPageCount'] = result[5]
+				item['createTime'] = result[6]
+				item['lastUpdateTime'] = result[7]
+				item['levels'] = result[8]
+				items_res.append(item)
+
+		return items_res
+
+
+	def query_by_domain_and_status(self,items = []):
 		query_sql = "select id,siteDomain,url,grabStatus,innerPageCount,outPageCount,createTime,lastUpdateTime from SiteGrabHistory where siteDomain = '%s' and grabStatus = '%s' order by id asc limit 100" % (items['siteDomain'],items['grabStatus'])
 		cursor = self.get_cursor()
 		cursor.execute(query_sql)
@@ -60,6 +85,19 @@ class SiteGrabHistory(object):
 				items_res.append(item)
 
 		return items_res
+
+	
+	def query_by_url(self,url):
+		query_sql = "select levels from SiteGrabHistory where url = '%s' " % (url)
+		cursor = self.get_cursor()
+		results = cursor.execute(query_sql)
+		#results = cursor.fetchon()
+
+		return results
+
+
+
+
 
 
 	def update(self,items = []):

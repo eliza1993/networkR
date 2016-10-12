@@ -9,10 +9,19 @@ from networkR.util.UrlUtil import *
 
 class NetworRSpider(scrapy.Spider):
     name = "networkr"
-    allowed_domains = ["www.i7gou.com"]
-    start_urls = [
-        "http://www.i7gou.com"
-    ]
+    allowed_domains = None#["http://www.i7gou.com"]
+    #start_urls = []
+    start_urls = []
+    file = open("domains.txt")
+    for line in file:
+        if line and len(line) > 0:
+            line=line.strip('\n')
+            line=line.strip('\r')
+            seed_url = 'http://' + line
+            start_urls.append(seed_url)
+    print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    print "Finish updated start_urls : ", start_urls
+    print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
 
     gbSite = None
     gbSiteHis = None
@@ -22,7 +31,7 @@ class NetworRSpider(scrapy.Spider):
         self.init_gb_site()
         self.init_site_grab_history()
 
-
+    
     def start_requests(self):
         if self.start_urls and len(self.start_urls) > 0:
             self.handle_start_url()
@@ -30,12 +39,16 @@ class NetworRSpider(scrapy.Spider):
         urls = self.plan_next_excute_urls()
         for url in urls:
             yield self.make_requests_from_url(url)
-
-
-            
+         
 
     def parse(self, response):
         if response is None:
+            return
+
+        if response.status != '200':
+            print "**********" 
+            print response.status
+            print "**********"
             return
 
         url = handle_url(response.url)
@@ -49,9 +62,16 @@ class NetworRSpider(scrapy.Spider):
         item = NetworkrItem()
         item['siteDomain'] = get_domain(url)
         item['url'] = handle_url(url)
+
         innerPageArray,outPageArray = self.parse_page_links(item['siteDomain'],response)
         item['innerPageArray'] = innerPageArray
         item['outPageArray'] = outPageArray
+        if item['siteDomain'] == item['url']:
+            item['levels'] = 0
+        else:
+            levels = self.gbSiteHis.query_by_url(response.url)
+            levels = levels + 1
+            item['levels'] = levels
 
         return item
 
@@ -123,6 +143,9 @@ class NetworRSpider(scrapy.Spider):
                 items['startGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
                 items['endGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
                 self.gbSite.insert_one(items)
+        print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+        print "Finish handle start_urls"
+        print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
 
 
     def init_gb_site(self):
@@ -144,7 +167,7 @@ class NetworRSpider(scrapy.Spider):
             hItems = {}
             hItems['siteDomain'] = result['siteDomain']
             hItems['grabStatus'] = 'NEW'
-            result =  self.gbSiteHis.query_by_domain_and_status(hItems)
+            result =  self.gbSiteHis.query_by_domain_and_status(hItems)     
             if not(result is None) and len(result) > 0:
                 urls = []
                 for res in result:
@@ -152,7 +175,7 @@ class NetworRSpider(scrapy.Spider):
 
                 return urls
 
-            hItems['grabStatus'] = 'FINISH'
+            hItems['siteStatus'] = 'FINISH'
             self.gbSite.update(hItems)
 
         
@@ -165,7 +188,6 @@ class NetworRSpider(scrapy.Spider):
             item['siteStatus'] = 'WORKING'
             item['siteDomain'] = result['siteDomain']
             self.gbSite.update(item)
-
             return urls;
 
 

@@ -60,6 +60,10 @@ class NetworkrPipeline(object):
 
 		innerPageArray = item['innerPageArray']
 		outPageArray = item['outPageArray']
+		levels = item['levels']
+		if levels > 1:
+			return
+
 		insertItems = {}
 		
 		
@@ -67,6 +71,7 @@ class NetworkrPipeline(object):
 			insertItems["grabStatus"] = 'NEW'
 			insertItems["url"] = innerPageArray[index]
 			insertItems["siteDomain"] = self.get_domain(innerPageArray[index])
+			insertItems['levels'] = levels
 			insertItems['innerPageCount'] = 0
 			insertItems['outPageCount'] = 0
 			insertItems['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -79,6 +84,7 @@ class NetworkrPipeline(object):
 			insertItems["grabStatus"] = 'NEW'
 			insertItems["url"] = outPageArray[index]
 			insertItems["siteDomain"] = self.get_domain(outPageArray[index])
+			insertItems['levels'] = levels
 			insertItems['innerPageCount'] = 0
 			insertItems['outPageCount'] = 0
 			insertItems['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -132,8 +138,11 @@ class NetworkrPipeline(object):
 		url = http_pro + url
 		return url
 
-
-
+	"""
+	def get_sitename(self,url):
+		sitename = ''
+		/head/title[1]
+	"""
         
 
 
