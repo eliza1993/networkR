@@ -42,22 +42,21 @@ class NetworRSpider(scrapy.Spider):
          
 
     def parse(self, response):
+        print response
         if response is None:
             return
 
         if response.status != 200:
-            print "**********" 
-            print response.status
-            print "**********"
+            #print "**********" 
+            #print response.status
+            #print "**********"
+            self.handle_error_url(response.url)
             return
 
         url = handle_url(response.url)
 
-        print '=====================2'
+        #print '=====================2'
         item = self.parse_item(url,response)
-
-        print '=====================1'
-        print item
 
         return item
 
@@ -87,7 +86,7 @@ class NetworRSpider(scrapy.Spider):
         totalLinks = []
         for aItem in response.xpath('//a'):
             link = aItem.xpath('@href').extract()
-            print link
+            #print link
             if len(link) > 0:
                 url = self.link_filter(domain,link[0])
                 if not(url is None):
@@ -124,9 +123,16 @@ class NetworRSpider(scrapy.Spider):
 
         if '.net' in link:
             return link
+
+        if '#' in link:
+            return None
+
+        if link.endwith('/'):
+            return None
             
         if not(domain in link):
             link = domain + '/' + link
+
 
         return link;
 
@@ -153,14 +159,30 @@ class NetworRSpider(scrapy.Spider):
         print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
 
 
+
+    def handle_error_url(self,url):
+        items = {}
+        items["grabStatus"] = 'FINISH'
+        items["url"] = url
+        items["siteDomain"] = get_domain(url)
+        items['innerPageCount'] = 0
+        items['outPageCount'] = 0
+        items['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+        self.gbSiteHis.update(items);
+        print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+        print "Finish handle error_urls"
+        print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+
+
+
     def init_gb_site(self):
         mysqlConn = mysqlConnector()
-        dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
+        dbConn = mysqlConn.openDb('127.0.0.1','root','','Spider')
         self.gbSite = GrabSite(dbConn)
 
     def init_site_grab_history(self):
         mysqlConn = mysqlConnector()
-        dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
+        dbConn = mysqlConn.openDb('127.0.0.1','root','','Spider')
         self.gbSiteHis = SiteGrabHistory(dbConn)
 
 
@@ -172,7 +194,9 @@ class NetworRSpider(scrapy.Spider):
             hItems = {}
             hItems['siteDomain'] = result['siteDomain']
             hItems['grabStatus'] = 'NEW'
-            result =  self.gbSiteHis.query_by_domain_and_status(hItems)     
+            result =  self.gbSiteHis.query_by_domain_and_status(hItems)  
+            print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+            print result   
             if not(result is None) and len(result) > 0:
                 urls = []
                 for res in result:

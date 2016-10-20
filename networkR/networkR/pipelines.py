@@ -32,17 +32,17 @@ class NetworkrPipeline(object):
 
 	def init_site_relation(self):
 		mysqlConn = mysqlConnector()
-		dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
+		dbConn = mysqlConn.openDb('127.0.0.1','root','','Spider')
 		self.siteGrabHis = SiteGrabHistory(dbConn)
 
 	def init_site_grab_his(self):
 		mysqlConn = mysqlConnector()
-		dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
+		dbConn = mysqlConn.openDb('127.0.0.1','root','','Spider')
 		self.siteRelation = SiteRelation(dbConn)
 
 	def init_site_grab(self):
 		mysqlConn = mysqlConnector()
-		dbConn = mysqlConn.openDb('192.168.31.160','root','','Spider')
+		dbConn = mysqlConn.openDb('127.0.0.1','root','','Spider')
 		self.siteGb = GrabSite(dbConn)
 
 	def process_item(self, item, spider):
@@ -51,6 +51,7 @@ class NetworkrPipeline(object):
 		"""
 
 		if item is None:
+			print '*******************'
 			print 'None'
 			return
 
@@ -61,64 +62,60 @@ class NetworkrPipeline(object):
 		innerPageArray = item['innerPageArray']
 		outPageArray = item['outPageArray']
 		levels = item['levels']
-		if levels > 1:
-			return
 
 		insertItems = {}
-		
-		
-		for index in range(0,len(innerPageArray)):
-			insertItems["grabStatus"] = 'NEW'
-			insertItems["url"] = innerPageArray[index]
-			insertItems["siteDomain"] = self.get_domain(innerPageArray[index])
-			insertItems['levels'] = levels
-			insertItems['innerPageCount'] = 0
-			insertItems['outPageCount'] = 0
-			insertItems['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-			self.siteGrabHis.insert_one(insertItems);
+		if levels < 2:
+			for index in range(0,len(innerPageArray)):
+				insertItems["grabStatus"] = 'NEW'
+				insertItems["url"] = innerPageArray[index]
+				insertItems["siteDomain"] = self.get_domain(innerPageArray[index])
+				insertItems['levels'] = levels
+				insertItems['innerPageCount'] = 0
+				insertItems['outPageCount'] = 0
+				insertItems['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+				insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+				self.siteGrabHis.insert_one(insertItems);	
 
 
+			for index in range(0,len(outPageArray)):
+				insertItems["grabStatus"] = 'NEW'
+				insertItems["url"] = outPageArray[index]
+				insertItems["siteDomain"] = self.get_domain(outPageArray[index])
+				insertItems['levels'] = levels
+				insertItems['innerPageCount'] = 0
+				insertItems['outPageCount'] = 0
+				insertItems['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+				insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+				self.siteGrabHis.insert_one(insertItems);
+				
+				if not self.siteGbDic.has_key(insertItems["siteDomain"]):
+					gbSiteItem = {}
+					gbSiteItem['siteDomain'] = insertItems["siteDomain"]
+					gbSiteItem['siteName'] = insertItems["siteDomain"]
+					gbSiteItem['webPageCount'] = 0
+					gbSiteItem['totalOutLinkCuont'] = 0
+					gbSiteItem['siteStatus'] = 'NEW' 
+					gbSiteItem['siteType'] = 'outlink'
+					gbSiteItem['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+					gbSiteItem['startGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+					gbSiteItem['endGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+					self.siteGb.insert_one(gbSiteItem)
 
-		for index in range(0,len(outPageArray)):
-			insertItems["grabStatus"] = 'NEW'
-			insertItems["url"] = outPageArray[index]
-			insertItems["siteDomain"] = self.get_domain(outPageArray[index])
-			insertItems['levels'] = levels
-			insertItems['innerPageCount'] = 0
-			insertItems['outPageCount'] = 0
-			insertItems['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-			self.siteGrabHis.insert_one(insertItems);
+				#建立 site relation 关系
+				self.handle_site_relation(item['siteDomain'],insertItems["siteDomain"])		
 			
-			if not self.siteGbDic.has_key(insertItems["siteDomain"]):
-				gbSiteItem = {}
-				gbSiteItem['siteDomain'] = insertItems["siteDomain"]
-				gbSiteItem['siteName'] = insertItems["siteDomain"]
-				gbSiteItem['webPageCount'] = 0
-				gbSiteItem['totalOutLinkCuont'] = 0
-				gbSiteItem['siteStatus'] = 'NEW' 
-				gbSiteItem['siteType'] = 'outlink'
-				gbSiteItem['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
-				gbSiteItem['startGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
-				gbSiteItem['endGrabTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
-				self.siteGb.insert_one(gbSiteItem)
-
-			#建立 site relation 关系
-			self.handle_site_relation(item['siteDomain'],insertItems["siteDomain"])
 
 
 
-			insertItems["grabStatus"] = 'FINISH'
-			insertItems["url"] = item['url']
-			insertItems["siteDomain"] = item['siteDomain']
-			insertItems['innerPageCount'] = len(innerPageArray)
-			insertItems['outPageCount'] = len(outPageArray)
-			insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
-			self.siteGrabHis.update(insertItems);
-
-
-			self.siteGb.update_count(insertItems)
+		insertItems["grabStatus"] = 'FINISH'
+		insertItems["url"] = item['url']
+		insertItems["siteDomain"] = item['siteDomain']
+		insertItems['innerPageCount'] = len(innerPageArray)
+		insertItems['outPageCount'] = len(outPageArray)
+		insertItems['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+		self.siteGrabHis.update(insertItems);
+		print insertItems
+		self.siteGb.update_count(insertItems)
 
 
 	def get_domain(self,url):
