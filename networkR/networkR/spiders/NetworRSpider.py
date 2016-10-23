@@ -86,7 +86,6 @@ class NetworRSpider(scrapy.Spider):
         totalLinks = []
         for aItem in response.xpath('//a'):
             link = aItem.xpath('@href').extract()
-            #print link
             if len(link) > 0:
                 url = self.link_filter(domain,link[0])
                 if not(url is None):
@@ -127,9 +126,9 @@ class NetworRSpider(scrapy.Spider):
         if '#' in link:
             return None
 
-        if link.endwith('/'):
+        if link.endswith('/'):
             return None
-            
+
         if not(domain in link):
             link = domain + '/' + link
 
