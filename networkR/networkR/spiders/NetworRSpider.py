@@ -221,11 +221,20 @@ class NetworRSpider(scrapy.Spider):
         return []
 
     def update_crawl_status(self,results = []):
+        newResult = [];
         for result in results:
             count = result['crawlCount'];
             count = count + 1;
+            result['crawlCount'] = count
             if result['crawlCount'] >= 3:
-                pass
+                result['grabStatus'] = 'FINISH'
+
+            self.gbSiteHis.update_crawl_count(result)
+
+
+
+
+
 
         
 
