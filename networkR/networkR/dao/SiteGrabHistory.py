@@ -41,7 +41,7 @@ class SiteGrabHistory(object):
 
 
 	def query_by_domain_and_status(self,items = []):
-		query_sql = "select id,siteDomain,url,levels,grabStatus,innerPageCount,outPageCount,createTime,lastUpdateTime from SiteGrabHistory where siteDomain = '%s' and grabStatus = '%s' order by id asc limit 100" % (items['siteDomain'],items['grabStatus'])
+		query_sql = "select id,siteDomain,url,levels,grabStatus,innerPageCount,outPageCount,createTime,lastUpdateTime ,crawlCount from SiteGrabHistory where siteDomain = '%s' and grabStatus = '%s' order by id asc limit 100" % (items['siteDomain'],items['grabStatus'])
 		cursor = self.get_cursor()
 		cursor.execute(query_sql)
 		results = cursor.fetchall()
@@ -59,6 +59,7 @@ class SiteGrabHistory(object):
 				item['createTime'] = result[6]
 				item['lastUpdateTime'] = result[7]
 				item['levels'] = result[8]
+				item['crawlCount'] = result[9]
 				items_res.append(item)
 
 		return items_res
@@ -106,6 +107,15 @@ class SiteGrabHistory(object):
 		cursor = self.get_cursor()
 		cursor.execute(update_sql)
 		self.mysqlConn.commit()
+
+
+	def update_crawl_count(self,items = []):
+
+		update_sql = "update SiteGrabHistory set grabStatus = '%s' ,crawCount = %s,lastUpdateTime='%s' where url = '%s' " %(items['grabStatus'],items['crawCount'],items['lastUpdateTime'],items['url'])
+		cursor = self.get_cursor()
+		cursor.execute(update_sql)
+		self.mysqlConn.commit()
+		
 
 
 

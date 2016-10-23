@@ -194,9 +194,8 @@ class NetworRSpider(scrapy.Spider):
             hItems['siteDomain'] = result['siteDomain']
             hItems['grabStatus'] = 'NEW'
             result =  self.gbSiteHis.query_by_domain_and_status(hItems)  
-            print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-            print result   
             if not(result is None) and len(result) > 0:
+                self.update_crawl_status(result)
                 urls = []
                 for res in result:
                     urls.append(res['url'])
@@ -220,6 +219,13 @@ class NetworRSpider(scrapy.Spider):
 
 
         return []
+
+    def update_crawl_status(self,results = []):
+        for result in results:
+            count = result['crawlCount'];
+            count = count + 1;
+            if result['crawlCount'] >= 3:
+                pass
 
         
 
