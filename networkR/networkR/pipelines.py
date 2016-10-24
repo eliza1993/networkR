@@ -154,7 +154,7 @@ class NetworkrPipeline(object):
 		items = {}
 		items['masterSite'] = masterSite;
 		items['outLinkSite'] = outLinkSite
-		items['outLinkCount'] = 0
+		items['outLinkCount'] = 1
 		items['createTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
 		items['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
 

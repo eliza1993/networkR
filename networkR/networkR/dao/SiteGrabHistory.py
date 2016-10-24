@@ -62,30 +62,31 @@ class SiteGrabHistory(object):
 				item['crawlCount'] = result[9]
 				items_res.append(item)
 
-		return items_res
-
-
-	def query_by_domain_and_status(self,items = []):
-		query_sql = "select id,siteDomain,url,grabStatus,innerPageCount,outPageCount,createTime,lastUpdateTime from SiteGrabHistory where siteDomain = '%s' and grabStatus = '%s' order by id asc limit 100" % (items['siteDomain'],items['grabStatus'])
-		cursor = self.get_cursor()
-		cursor.execute(query_sql)
-		results = cursor.fetchall()
-
-		items_res = []
-		if len(results) > 0:
-			for result in results:
-				item = {}
-				item['id'] = result[0]
-				item['siteDomain'] = result[1]
-				item['url'] = result[2]
-				item['grabStatus'] = result[3]
-				item['innerPageCount'] = result[4]
-				item['outPageCount'] = result[5]
-				item['createTime'] = result[6]
-				item['lastUpdateTime'] = result[7]
-				items_res.append(item)
 
 		return items_res
+
+
+	# def query_by_domain_and_status(self,items = []):
+	# 	query_sql = "select id,siteDomain,url,grabStatus,innerPageCount,outPageCount,createTime,lastUpdateTime from SiteGrabHistory where siteDomain = '%s' and grabStatus = '%s' order by id asc limit 100" % (items['siteDomain'],items['grabStatus'])
+	# 	cursor = self.get_cursor()
+	# 	cursor.execute(query_sql)
+	# 	results = cursor.fetchall()
+
+	# 	items_res = []
+	# 	if len(results) > 0:
+	# 		for result in results:
+	# 			item = {}
+	# 			item['id'] = result[0]
+	# 			item['siteDomain'] = result[1]
+	# 			item['url'] = result[2]
+	# 			item['grabStatus'] = result[3]
+	# 			item['innerPageCount'] = result[4]
+	# 			item['outPageCount'] = result[5]
+	# 			item['createTime'] = result[6]
+	# 			item['lastUpdateTime'] = result[7]
+	# 			items_res.append(item)
+
+	# 	return items_res
 
 	
 	def query_by_url(self,url):
@@ -111,7 +112,7 @@ class SiteGrabHistory(object):
 
 	def update_crawl_count(self,items = []):
 
-		update_sql = "update SiteGrabHistory set grabStatus = '%s' ,crawCount = %s,lastUpdateTime='%s' where url = '%s' " %(items['grabStatus'],items['crawCount'],items['lastUpdateTime'],items['url'])
+		update_sql = "update SiteGrabHistory set grabStatus = '%s' ,crawlCount = %s,lastUpdateTime='%s' where url = '%s' " %(items['grabStatus'],items['crawlCount'],items['lastUpdateTime'],items['url'])
 		cursor = self.get_cursor()
 		cursor.execute(update_sql)
 		self.mysqlConn.commit()

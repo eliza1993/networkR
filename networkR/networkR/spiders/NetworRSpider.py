@@ -5,6 +5,8 @@ from networkR.dao.GrabSite import GrabSite
 from networkR.dao.mysqlConnector import mysqlConnector
 from networkR.dao.SiteGrabHistory import SiteGrabHistory
 
+from scrapy.selector import Selector 
+
 from networkR.util.UrlUtil import *
 
 class NetworRSpider(scrapy.Spider):
@@ -84,7 +86,10 @@ class NetworRSpider(scrapy.Spider):
         innerPageArray,outPageArray = [],[]
 
         totalLinks = []
-        for aItem in response.xpath('//a'):
+        print '222222=================='
+        print response
+        hxs=Selector(text=response.body)
+        for aItem in hxs.xpath('//a'):
             link = aItem.xpath('@href').extract()
             if len(link) > 0:
                 url = self.link_filter(domain,link[0])
@@ -189,12 +194,14 @@ class NetworRSpider(scrapy.Spider):
         items = {}
         items['siteStatus'] = 'WORKING'
         result = self.gbSite.query_grab_site_by_status(items)
+        print result
         if not(result is None):
             hItems = {}
             hItems['siteDomain'] = result['siteDomain']
             hItems['grabStatus'] = 'NEW'
             result =  self.gbSiteHis.query_by_domain_and_status(hItems)  
             if not(result is None) and len(result) > 0:
+                print result
                 self.update_crawl_status(result)
                 urls = []
                 for res in result:
@@ -223,12 +230,17 @@ class NetworRSpider(scrapy.Spider):
     def update_crawl_status(self,results = []):
         newResult = [];
         for result in results:
-            count = result['crawlCount'];
-            count = count + 1;
+            print result
+            count = result['crawlCount']
+            count = count + 1
             result['crawlCount'] = count
             if result['crawlCount'] >= 3:
-                result['grabStatus'] = 'FINISH'
+                result['grabStatus'] = 'FINISH'  #grabStatus
 
+            else:
+                result['grabStatus'] = 'NEW'  #grabStatus
+
+            result['lastUpdateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
             self.gbSiteHis.update_crawl_count(result)
 
 
